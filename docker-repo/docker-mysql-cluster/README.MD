@@ -1,0 +1,1 @@
+This docker compose is extended version of [twang2218/mysql-replica](https://github.com/twang2218/mysql-replica) in order to assign static ip for each container.

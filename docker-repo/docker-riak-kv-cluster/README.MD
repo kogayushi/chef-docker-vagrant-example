@@ -1,0 +1,1 @@
+This docker compose is extended version of [official sample](https://hub.docker.com/r/basho/riak-kv/) in order to assign static ip for each container.
