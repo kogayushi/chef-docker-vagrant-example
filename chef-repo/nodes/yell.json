@@ -1,0 +1,8 @@
+{
+  "run_list": [
+    "recipe[selinux::disabled]",
+    "recipe[yumsetup]",
+    "recipe[chef-yum-docker]",
+	"recipe[my-docker]"
+  ]
+}

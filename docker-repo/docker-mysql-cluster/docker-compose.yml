@@ -1,0 +1,57 @@
+version: '2'
+services:
+  master:
+    image: mysql:5.7-replica
+    build: .
+    restart: unless-stopped
+    volumes_from:
+      - db_data_master
+    ports:
+      - 3306:3306
+    networks:
+      default:
+        ipv4_address: 192.168.33.31
+    environment:
+      - MYSQL_ROOT_PASSWORD=master_passw0rd
+      - MYSQL_USER=my_user
+      - MYSQL_PASSWORD=my_password
+      - MYSQL_REPLICA_USER=replica
+      - MYSQL_REPLICA_PASS=replica_Passw0rd
+      - MYSQL_DATABASE=test
+    command: ["mysqld", "--log-bin=mysql-bin", "--server-id=1"]
+  slave:
+    image: mysql:5.7-replica
+    build: .
+    restart: unless-stopped
+    links:
+      - master
+    volumes_from:
+      - db_data_slave
+    ports:
+       - 3307:3306
+    networks:
+      default:
+        ipv4_address: 192.168.33.32
+    environment:
+      - MYSQL_ROOT_PASSWORD=slave_passw0rd
+      - MYSQL_USER=my_user
+      - MYSQL_PASSWORD=my_password
+      - MYSQL_REPLICA_USER=replica
+      - MYSQL_REPLICA_PASS=replica_Passw0rd
+      - MYSQL_MASTER_SERVER=master
+      - MYSQL_MASTER_WAIT_TIME=10
+      - MYSQL_DATABASE=test
+    command: ["mysqld", "--log-bin=mysql-bin", "--server-id=2"]
+
+  db_data_master:
+    image: busybox
+    volumes:
+      - /var/lib/mysql
+  db_data_slave:
+    image: busybox
+    volumes:
+      - /var/lib/mysql
+networks:
+  default:
+    external:
+      name: shared_nw

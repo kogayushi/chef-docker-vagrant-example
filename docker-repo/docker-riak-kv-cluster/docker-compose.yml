@@ -1,0 +1,58 @@
+version: "2"
+services:
+  coordinator:
+    image: basho/riak-kv
+    hostname: coordinator
+    restart: always
+    ports:
+      - "8087:8087"
+      - "8098:8098"
+    environment:
+      - CLUSTER_NAME=riakkv
+    labels:
+      - "com.basho.riak.cluster.name=riak-kv"
+    volumes:
+      - schemas:/etc/riak/schemas
+    networks:
+      default:
+        ipv4_address: 192.168.33.21
+  member1:
+    image: basho/riak-kv
+    restart: always
+    ports:
+      - "8187:8087"
+      - "8198:8098"
+    labels:
+      - "com.basho.riak.cluster.name=riak-kv"
+    links:
+      - coordinator
+    networks:
+      default:
+        ipv4_address: 192.168.33.22
+    environment:
+      - CLUSTER_NAME=riakkv
+      - COORDINATOR_NODE=coordinator
+  member2:
+    image: basho/riak-kv
+    restart: always
+    ports:
+      - "8287:8087"
+      - "8298:8098"
+    labels:
+      - "com.basho.riak.cluster.name=riak-kv"
+    links:
+      - coordinator
+    networks:
+      default:
+        ipv4_address: 192.168.33.23
+    environment:
+      - CLUSTER_NAME=riakkv
+      - COORDINATOR_NODE=coordinator
+
+volumes:
+  schemas: {}
+
+networks:
+  default:
+    external:
+      name: shared_nw

@@ -1,0 +1,10 @@
+name 'my-docker'
+maintainer 'Yushi Koga'
+maintainer_email 'youshe.old.pleasure@gmail.com'
+license 'all_rights'
+description 'Installs/Configures docker'
+long_description 'Installs/Configures docker'
+version '0.1.0'
+
+depends 'docker', '~> 2.0'
+depends 'docker_compose', '~> 0.0'

@@ -1,0 +1,53 @@
+version: '2'
+services:
+  rabbit1:
+    image: harbur/rabbitmq-cluster
+    build: .
+    hostname: rabbit1
+    restart: always
+    environment:
+      - ERLANG_COOKIE=abcdefg
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      default:
+        ipv4_address: 192.168.33.11
+  rabbit2:
+    image: harbur/rabbitmq-cluster
+    build: .
+    hostname: rabbit2
+    restart: always
+    links:
+      - rabbit1
+    environment:
+      - ERLANG_COOKIE=abcdefg
+      - CLUSTER_WITH=rabbit1
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    networks:
+      default:
+        ipv4_address: 192.168.33.12
+  rabbit3:
+    image: harbur/rabbitmq-cluster
+    build: .
+    hostname: rabbit3
+    restart: always
+    links:
+      - rabbit1
+      - rabbit2
+    environment:
+      - ERLANG_COOKIE=abcdefg
+      - CLUSTER_WITH=rabbit1
+    ports:
+      - "5674:5672"
+      - "15674:15672"
+    networks:
+      default:
+        ipv4_address: 192.168.33.13
+
+networks:
+  default:
+    external:
+      name: shared_nw

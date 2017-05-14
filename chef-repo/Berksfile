@@ -1,0 +1,6 @@
+source "https://api.berkshelf.com"
+cookbook 'docker'
+cookbook 'docker_compose'
+cookbook 'chef-yum-docker'
+cookbook 'chef-apt-docker'
+cookbook 'selinux'
